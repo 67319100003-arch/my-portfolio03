@@ -1,62 +1,80 @@
+const cards = [
+  {
+    icon: '💡',
+    title: 'ปรัชญา',
+    quote: '"ทักษะเยี่ยม เปี่ยมคุณธรรม เลิศล้ำปัญญา พัฒนาสังคม"',
+    gradient: 'from-amber-500/20 to-amber-500/5',
+    border: 'border-amber-500/40',
+    accent: 'bg-amber-500',
+    iconBg: 'bg-amber-500/15 text-amber-400',
+  },
+  {
+    icon: '🎯',
+    title: 'วิสัยทัศน์',
+    quote: '"เป็นสถาบันการอาชีวศึกษาชั้นนำในการผลิตและพัฒนากำลังคนสมรรถนะสูง รองรับความต้องการของอุตสาหกรรมและสังคมแห่งอนาคต"',
+    gradient: 'from-blue-500/20 to-blue-500/5',
+    border: 'border-blue-500/40',
+    accent: 'bg-blue-500',
+    iconBg: 'bg-blue-500/15 text-blue-400',
+  },
+  {
+    icon: '🌟',
+    title: 'อัตลักษณ์',
+    quote: '"บริการเด่น เน้นฝีมือ เลื่องลือวินัย"',
+    gradient: 'from-indigo-500/20 to-indigo-500/5',
+    border: 'border-indigo-500/40',
+    accent: 'bg-indigo-500',
+    iconBg: 'bg-indigo-500/15 text-indigo-400',
+  },
+  {
+    icon: '🏫',
+    title: 'เอกลักษณ์',
+    quote: '"สถาบันแห่งการเรียนรู้เทคโนโลยีและธุรกิจดิจิทัล"',
+    gradient: 'from-emerald-500/20 to-emerald-500/5',
+    border: 'border-emerald-500/40',
+    accent: 'bg-emerald-500',
+    iconBg: 'bg-emerald-500/15 text-emerald-400',
+  },
+];
+
 export default function AboutPage() {
   return (
-    <main className="max-w-4xl mx-auto my-12 px-4 space-y-8">
-      {/* ส่วนหัวข้อหน้า */}
-      <div className="text-center space-y-2 mb-10">
-        <h1 className="text-3xl font-extrabold text-slate-800 tracking-tight md:text-4xl">
-          เกี่ยวกับวิทยาลัย
-        </h1>
-        <p className="text-gray-500 text-sm md:text-base">
-          ข้อมูลทิศทางและความมุ่งมั่นของวิทยาลัยพณิชยการธนบุรี
+    <section id="about" className="py-20 px-4 sm:px-6 max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="text-center mb-14">
+        <p className="text-xs font-black text-blue-400 tracking-widest uppercase mb-3">OUR IDENTITY</p>
+        <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">เกี่ยวกับวิทยาลัย</h2>
+        <div className="section-divider mx-auto" />
+        <p className="text-slate-400 text-sm mt-5 max-w-lg mx-auto">
+          ข้อมูลทิศทางและความมุ่งมั่นของวิทยาลัยพณิชยการธนบุรี ที่ยืนหยัดผลิตบุคลากรคุณภาพสู่สังคมมากว่า 60 ปี
         </p>
       </div>
 
-      {/* 💡 ปรัชญา (เด่นสุดแบบ Full Width) */}
-      <div className="bg-gradient-to-br from-amber-50 to-white p-8 rounded-2xl shadow-sm border border-amber-200/60 text-center relative overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-amber-500" />
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 text-2xl mb-3">
-          💡
-        </div>
-        <h2 className="text-xl font-bold text-slate-800">ปรัชญา</h2>
-        <p className="text-lg italic font-medium text-amber-900/90 mt-3 tracking-wide">
-          "ทักษะเยี่ยม เปี่ยมคุณธรรม เลิศล้ำปัญญา พัฒนาสังคม"
+      {/* Cards */}
+      <div className="grid sm:grid-cols-2 gap-6">
+        {cards.map((card, i) => (
+          <div
+            key={card.title}
+            className={`relative rounded-2xl bg-gradient-to-br ${card.gradient} border ${card.border} p-7 overflow-hidden group hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl hover:shadow-black/30`}
+          >
+            {/* Accent top bar */}
+            <div className={`absolute top-0 left-0 right-0 h-0.5 ${card.accent} opacity-80`} />
+            {/* Icon */}
+            <div className={`w-12 h-12 rounded-xl ${card.iconBg} flex items-center justify-center text-2xl mb-5`}>
+              {card.icon}
+            </div>
+            <h3 className="text-lg font-black text-white mb-3">{card.title}</h3>
+            <p className="text-slate-300 text-sm leading-relaxed italic font-medium">{card.quote}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* History blurb */}
+      <div className="mt-10 p-7 rounded-2xl bg-white/3 border border-white/8 text-center">
+        <p className="text-slate-400 text-sm leading-relaxed max-w-2xl mx-auto">
+          วิทยาลัยพณิชยการธนบุรีตั้งอยู่ใจกลางกรุงเทพมหานคร เขตบางกอกใหญ่ เปิดสอนหลักสูตรอาชีวศึกษาระดับ ปวช. และ ปวส. ในสาขาวิชาบริหารธุรกิจ การบัญชี เทคโนโลยีดิจิทัล และอุตสาหกรรมท่องเที่ยว มุ่งเน้นพัฒนาบุคลากรวิชาชีพที่มีสมรรถนะตรงความต้องการของตลาดแรงงาน
         </p>
       </div>
-
-      {/* 🎯 วิสัยทัศน์ */}
-      <div className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-[1.01]">
-        <div className="absolute top-0 left-0 w-full h-1.5 bg-blue-600" />
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600 text-2xl mb-3">
-          🎯
-        </div>
-        <h2 className="text-xl font-bold text-slate-800">วิสัยทัศน์</h2>
-        <p className="text-gray-600 mt-3 leading-relaxed">
-          "เป็นสถาบันการอาชีวศึกษาชั้นนำในการผลิตและพัฒนากำลังคนสมรรถนะสูง รองรับความต้องการของอุตสาหกรรมและสังคมแห่งอนาคต"
-        </p>
-      </div>
-
-      {/* 🌟 อัตลักษณ์ & เอกลักษณ์ (Grid 2 คอลัมน์) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* อัตลักษณ์ */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-indigo-600" />
-          <div className="text-3xl mb-2">🌟</div>
-          <h3 className="text-lg font-bold text-slate-800">อัตลักษณ์</h3>
-          <p className="text-gray-600 mt-2 font-medium">
-            "บริการเด่น เน้นฝีมือ เลื่องลือวินัย"
-          </p>
-        </div>
-
-        {/* เอกลักษณ์ (เพิ่มเข้ามาให้เข้าคู่กันตามมาตรฐานโรงเรียน/วิทยาลัย) */}
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden transition-all duration-300 hover:shadow-md hover:scale-[1.02]">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-emerald-600" />
-          <div className="text-3xl mb-2">🏫</div>
-          <h3 className="text-lg font-bold text-slate-800">เอกลักษณ์</h3>
-          <p className="text-gray-600 mt-2 font-medium">
-            "สถาบันแห่งการเรียนรู้เทคโนโลยีและธุรกิจดิจิทัล"
-          </p>
-        </div>
-      </div>
-    </main>
+    </section>
   );
 }

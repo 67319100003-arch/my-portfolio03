@@ -1,64 +1,101 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+
+const navLinks = [
+  { label: 'หน้าแรก', href: '/' },
+  { label: 'เกี่ยวกับวิทยาลัย', href: '#about' },
+  { label: 'หลักสูตร', href: '#departments' },
+  { label: 'ข่าวสาร', href: '#news' },
+  { label: 'ติดต่อเรา', href: '#contact' },
+];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="bg-blue-900 text-white sticky top-0 z-50 shadow-md">
-      <div className="max-w-5xl mx-auto px-4 py-2 flex justify-between items-center">
-        
-        {/* โลโก้ + ชื่อวิทยาลัย */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-9 h-9 bg-white rounded-full overflow-hidden flex items-center justify-center p-0.5 border border-blue-800 shadow-sm">
-            {/* 🖼️ เรียกใช้รูปภาพโลโก้จากโฟลเดอร์ public */}
-            <img 
-              src="/op.jpg" 
-              alt="โลโก้ พณิชยการธนบุรี" 
-              className="w-full h-full object-contain rounded-full"
-            />
-          </div>
-          <div className="leading-tight">
-            <span className="text-sm font-black tracking-wide block group-hover:text-amber-400 transition">TCC</span>
-            <span className="text-[10px] text-blue-200 block">พณิชยการธนบุรี</span>
-          </div>
-        </Link>
+    <nav className={`sticky top-0 z-50 transition-all duration-300 ${
+      scrolled
+        ? 'bg-slate-950/90 backdrop-blur-xl border-b border-white/10 shadow-2xl shadow-black/40'
+        : 'bg-slate-950/70 backdrop-blur-md'
+    }`}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-16">
 
-        {/* เมนูสำหรับ Desktop (กระชับและปรับช่องไฟให้สวยขึ้น) */}
-        <div className="hidden md:flex space-x-6 text-xs font-bold tracking-wide items-center">
-          <Link href="/" className="hover:text-amber-400 transition">หน้าแรก</Link>
-          <Link href="#" className="hover:text-amber-400 transition">เกี่ยวกับวิทยาลัย</Link>
-          <Link href="#" className="hover:text-amber-400 transition">หลักสูตร</Link>
-          <Link href="#" className="hover:text-amber-400 transition">ติดต่อเรา</Link>
-          <Link href="/admin" className="hover:text-amber-400 bg-blue-800 px-3 py-1 rounded-lg border border-blue-700/50 hover:bg-blue-700 transition">แอดมิน</Link>
+          {/* Logo */}
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-blue-500/50 shadow-lg shadow-blue-500/20 flex-shrink-0">
+              <img src="/op.jpg" alt="TCC Logo" className="w-full h-full object-contain" />
+            </div>
+            <div className="leading-tight">
+              <span className="text-sm font-black tracking-widest text-white block group-hover:text-blue-400 transition-colors">TCC</span>
+              <span className="text-[10px] text-slate-400 font-medium">พณิชยการธนบุรี</span>
+            </div>
+          </Link>
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="px-3 py-2 rounded-lg text-xs font-semibold text-slate-300 hover:text-white hover:bg-white/8 transition-all duration-200"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/admin"
+              className="ml-3 px-4 py-1.5 rounded-lg text-xs font-bold border border-blue-500/50 text-blue-400 hover:bg-blue-500/15 hover:border-blue-400 hover:text-blue-300 transition-all duration-200"
+            >
+              ⚙ แอดมิน
+            </Link>
+          </div>
+
+          {/* Hamburger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/10 transition-all"
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 h-4 flex flex-col justify-between">
+              <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+              <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? 'opacity-0 scale-x-0' : ''}`} />
+              <span className={`block h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
+            </div>
+          </button>
         </div>
 
-        {/* ปุ่ม Hamburger สำหรับ Mobile */}
-        <button 
-          onClick={() => setIsOpen(!isOpen)} 
-          className="md:hidden p-1 text-blue-200 hover:text-white focus:outline-none transition"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            {isOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+        {/* Mobile Menu */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ${isOpen ? 'max-h-64 pb-4' : 'max-h-0'}`}>
+          <div className="pt-2 border-t border-white/10 flex flex-col gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="px-3 py-2.5 rounded-lg text-sm font-semibold text-slate-300 hover:text-white hover:bg-white/8 transition-all"
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              href="/admin"
+              onClick={() => setIsOpen(false)}
+              className="mt-1 px-3 py-2.5 rounded-lg text-sm font-bold text-blue-400 hover:bg-blue-500/15 transition-all"
+            >
+              ⚙ แอดมิน
+            </Link>
+          </div>
+        </div>
       </div>
-
-      {/* เมนูที่กางออกบน Mobile */}
-      {isOpen && (
-        <div className="md:hidden bg-blue-950 border-t border-blue-800 px-6 py-4 flex flex-col space-y-3 text-xs font-bold shadow-inner">
-          <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-amber-400 py-0.5">หน้าแรก</Link>
-          <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-400 py-0.5">เกี่ยวกับวิทยาลัย</Link>
-          <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-400 py-0.5">หลักสูตร</Link>
-          <Link href="#" onClick={() => setIsOpen(false)} className="hover:text-amber-400 py-0.5">ติดต่อเรา</Link>
-          <Link href="/admin" onClick={() => setIsOpen(false)} className="text-amber-400 py-0.5">แอดมิน</Link>
-        </div>
-      )}
     </nav>
   );
 }

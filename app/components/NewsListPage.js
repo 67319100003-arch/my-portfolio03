@@ -4,15 +4,15 @@ import { supabase } from '../lib/supabase';
 function formatThaiDate(dateString) {
   if (!dateString) return '';
   const date = new Date(dateString);
-  const months = [
-    'มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน',
-    'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'
-  ];
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear() + 543;
-  return `${day} ${month} ${year}`;
+  const months = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear() + 543}`;
 }
+
+const categoryColor = {
+  'ประชาสัมพันธ์': 'text-blue-400 bg-blue-500/10 border-blue-500/25',
+  'จัดซื้อ': 'text-amber-400 bg-amber-500/10 border-amber-500/25',
+  'ประกาศ': 'text-emerald-400 bg-emerald-500/10 border-emerald-500/25',
+};
 
 export default async function NewsListPage() {
   const { data: newsItems } = await supabase
@@ -23,42 +23,65 @@ export default async function NewsListPage() {
   const allNews = newsItems || [];
 
   return (
-    <main className="max-w-5xl mx-auto my-12 px-4 space-y-8">
+    <section id="news-list" className="py-20 px-4 sm:px-6 max-w-6xl mx-auto">
       {/* Header */}
-      <div className="border-b pb-4">
-        <h1 className="text-2xl font-black text-amber-500 tracking-wide">ข่าวประชาสัมพันธ์ทั้งหมด</h1>
-        <p className="text-gray-400 text-xs mt-1">อัปเดตกิจกรรมและข่าวสารล่าสุดจากวิทยาลัย</p>
+      <div className="mb-12">
+        <p className="text-xs font-black text-blue-400 tracking-widest uppercase mb-3">NEWS & ANNOUNCEMENTS</p>
+        <h2 className="text-4xl font-black text-white mb-3">ข่าวประชาสัมพันธ์ทั้งหมด</h2>
+        <div className="section-divider" />
+        <p className="text-slate-400 text-sm mt-4">อัปเดตกิจกรรมและข่าวสารล่าสุดจากวิทยาลัยพณิชยการธนบุรี</p>
       </div>
 
-      {/* News Grid */}
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {allNews.map((news) => (
-          <div key={news.id} className="bg-white rounded-2xl border overflow-hidden shadow-sm hover:shadow-md transition flex flex-col group">
-            {/* รูปภาพพร้อมเอฟเฟกต์ซูมเบาๆ เวลา Hover */}
-            <div className="overflow-hidden bg-slate-100 h-40">
-              <img 
-                src={news.img} 
-                className="w-full h-full object-cover transition duration-300 group-hover:scale-105" 
-                alt={news.title} 
-              />
-            </div>
-            
-            {/* เนื้อหา */}
-            <div className="p-4 flex flex-col flex-grow justify-between space-y-3">
-              <div>
-                <span className="text-[11px] font-medium text-slate-400 block">{formatThaiDate(news.created_at)}</span>
-                <h3 className="font-bold text-sm text-slate-800 line-clamp-2 mt-1 group-hover:text-blue-600 transition">
-                  <Link href={`/news/${news.id}`}>{news.title}</Link>
-                </h3>
+      {/* Grid */}
+      {allNews.length === 0 ? (
+        <div className="text-center py-24 text-slate-600">
+          <p className="text-5xl mb-4">📭</p>
+          <p className="text-sm font-medium">ยังไม่มีข่าวประชาสัมพันธ์</p>
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {allNews.map((news) => (
+            <Link
+              key={news.id}
+              href={`/news/${news.id}`}
+              className="group glass-card overflow-hidden border border-white/8 hover:border-blue-500/30 flex flex-col"
+            >
+              {/* Image */}
+              <div className="relative h-48 bg-slate-800 overflow-hidden flex-shrink-0">
+                {news.image_url ? (
+                  <img
+                    src={news.image_url}
+                    alt={news.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-5xl opacity-30">📰</div>
+                )}
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
               </div>
-              
-              <Link href={`/news/${news.id}`} className="text-xs font-bold text-blue-600 inline-flex items-center gap-1 self-start">
-                อ่านต่อ ➔
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    </main>
+
+              {/* Content */}
+              <div className="p-5 flex flex-col flex-grow">
+                {news.category && (
+                  <span className={`inline-block text-[10px] font-black px-2.5 py-0.5 rounded-full border mb-3 self-start ${categoryColor[news.category] || 'text-slate-400 bg-slate-500/10 border-slate-500/25'}`}>
+                    {news.category}
+                  </span>
+                )}
+                <h3 className="font-bold text-sm text-slate-200 line-clamp-2 group-hover:text-blue-300 transition-colors flex-grow leading-snug mb-4">
+                  {news.title}
+                </h3>
+                <div className="flex items-center justify-between pt-3 border-t border-white/8">
+                  <span className="text-[11px] text-slate-500 font-medium">{formatThaiDate(news.created_at)}</span>
+                  <span className="text-xs font-black text-blue-400 flex items-center gap-1 group-hover:gap-2 transition-all">
+                    อ่านต่อ →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
